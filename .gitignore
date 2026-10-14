@@ -1,0 +1,12 @@
+*.class
+build/
+target/
+.settings/
+.classpath
+.project
+*.log
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FuelExpress | Login &amp; Registration</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: { extend: {
+            "colors": {
+                "primary": "#004ac6", "secondary-container": "#fd761a",
+                "surface": "#f7f9fb", "surface-container-low": "#f2f4f6",
+                "on-surface": "#191c1e", "on-surface-variant": "#434655", "outline-variant": "#c3c6d7",
+                "error-container": "#ffdad6", "on-error-container": "#93000a"
+            },
+            "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+            "spacing": { "xl": "32px", "lg": "24px", "xs": "4px", "md": "16px", "sm": "8px", "gutter": "24px" },
+            "fontSize": {
+                "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                "label-lg": ["14px", {"lineHeight": "20px", "fontWeight": "600"}],
+                "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                "body-md": ["16px", {"lineHeight": "24px"}]
+            }
+        }}
+      }
+    </script>
+<style>
+      body { font-family: 'Inter', sans-serif; background-color: #f7f9fb; margin: 0; }
+      .glass-card { background: rgba(255,255,255,0.95); backdrop-filter: blur(12px); box-shadow: 0 4px 12px rgba(30,41,59,0.05); }
+      .input-focus-effect:focus { border-color: #004ac6; box-shadow: 0 0 0 3px rgba(0,74,198,0.1); outline: none; }
+      .hidden-form { display: none; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+<header class="sticky top-0 z-50 w-full backdrop-blur-md border-b border-outline-variant/30 bg-surface/80">
+<div class="flex justify-between items-center h-[72px] px-gutter max-w-[1280px] mx-auto w-full">
+<a href="Home_Page.html" class="text-headline-lg font-bold text-primary" style="font-size:24px;">FuelExpress</a>
+<div class="flex gap-md text-label-sm text-on-surface-variant">
+<span id="mode-label" class="px-md py-sm">Customer Login</span>
+</div>
+</div>
+</header>
+<main class="flex-grow flex flex-col items-center justify-center p-md relative overflow-hidden">
+<div class="absolute inset-0 z-0 opacity-20 pointer-events-none">
+<div class="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-primary rounded-full blur-[120px]"></div>
+<div class="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-secondary-container rounded-full blur-[120px]"></div>
+</div>
+
+<div class="relative z-10 w-full max-w-[640px] mb-md hidden" id="auth-message"></div>
+
+<!-- Login Card (used for customer / admin / delivery agent - the form action changes per mode) -->
+<section class="relative z-10 w-full max-w-[480px]" id="login-container">
+<div class="glass-card rounded-[24px] p-xl border border-outline-variant/20">
+<div class="text-center mb-xl">
+<h1 class="text-headline-lg text-on-surface mb-xs" id="login-title">Welcome Back</h1>
+<p class="text-body-md text-on-surface-variant" id="login-subtitle">Fueling your fleet with professional precision.</p>
+</div>
+<form class="space-y-md" id="login-form" method="post">
+<div>
+<label class="block font-label-lg text-on-surface mb-xs" for="login-email">Email Address</label>
+<input class="w-full h-12 px-md rounded-xl bg-surface-container-low border border-outline-variant/30 input-focus-effect" id="login-email" name="email" placeholder="you@example.com" required="" type="email"/>
+</div>
+<div>
+<label class="block font-label-lg text-on-surface mb-xs" for="login-password">Password</label>
+<input class="w-full h-12 px-md rounded-xl bg-surface-container-low border border-outline-variant/30 input-focus-effect" id="login-password" name="password" placeholder="••••••••" required="" type="password"/>
+</div>
+<button class="w-full h-12 bg-primary text-white font-label-lg rounded-xl hover:scale-[1.02] active:scale-95 transition-all shadow-md mt-sm" type="submit">Login</button>
+</form>
+<p class="text-center mt-xl text-body-md text-on-surface-variant" id="switch-to-register-line">
+                    Don't have an account? <button class="text-primary font-bold hover:underline" onclick="toggleForm('register')" type="button">Create Account</button>
+</p>
+<p class="text-center mt-xl text-body-md text-on-surface-variant" id="switch-to-agent-register-line" style="display:none;">
+                    New delivery partner? <button class="text-primary font-bold hover:underline" onclick="toggleForm('agentRegister')" type="button">Register here</button>
+</p>
+<div class="mt-lg pt-lg border-t border-outline-variant/20 flex justify-center gap-lg text-label-sm">
+<a class="text-on-surface-variant hover:text-primary" href="Auth_Pages.html?mode=login">Customer</a>
+<a class="text-on-surface-variant hover:text-primary" href="Auth_Pages.html?mode=agent">Delivery Partner</a>
+<a class="text-on-surface-variant hover:text-primary" href="Auth_Pages.html?mode=admin">Admin</a>
+</div>
+</div>
+</section>
+
+<!-- Registration Card (customers only) -->
+<section class="relative z-10 w-full max-w-[640px] hidden-form" id="register-container">
+<div class="glass-card rounded-[24px] p-xl border border-outline-variant/20">
+<div class="text-center mb-xl">
+<h1 class="text-headline-lg text-on-surface mb-xs">Join FuelExpress</h1>
+<p class="text-body-md text-on-surface-variant">Streamline your energy logistics in minutes.</p>
+</div>
+<form class="grid grid-cols-1 md:grid-cols-2 gap-x-lg gap-y-md" id="register-form" method="post" action="register">
+<div class="md:col-span-2">
+<label class="block font-label-lg text-on-surface mb-xs">Full Name</label>
+<input class="w-full h-12 px-md rounded-xl bg-surface-container-low border border-outline-variant/30 input-focus-effect" name="fullName" placeholder="Aditi Kulkarni" required="" type="text"/>
+</div>
+<div>
+<label class="block font-label-lg text-on-surface mb-xs">Email Address</label>
+<input class="w-full h-12 px-md rounded-xl bg-surface-container-low border border-outline-variant/30 input-focus-effect" name="email" placeholder="aditi@example.com" required="" type="email"/>
+</div>
+<div>
+<label class="block font-label-lg text-on-surface mb-xs">Mobile Number</label>
+<input class="w-full h-12 px-md rounded-xl bg-surface-container-low border border-outline-variant/30 input-focus-effect" name="phone" placeholder="+91 98765 43210" required="" type="tel"/>
+</div>
+<div>
+<label class="block font-label-lg text-on-surface mb-xs">Password</label>
+<input class="w-full h-12 px-md rounded-xl bg-surface-container-low border border-outline-variant/30 input-focus-effect" id="register-password" name="password" placeholder="••••••••" required="" type="password"/>
+</div>
+<div>
+<label class="block font-label-lg text-on-surface mb-xs">Confirm Password</label>
+<input class="w-full h-12 px-md rounded-xl bg-surface-container-low border border-outline-variant/30 input-focus-effect" id="register-confirm-password" placeholder="••••••••" required="" type="password"/>
+</div>
+<div>
+<label class="block font-label-lg text-on-surface mb-xs">City</label>
+<input class="w-full h-12 px-md rounded-xl bg-surface-container-low border border-outline-variant/30 input-focus-effect" name="city" placeholder="Pune" type="text"/>
+</div>
+<div>
+<label class="block font-label-lg text-on-surface mb-xs">Pincode</label>
+<input class="w-full h-12 px-md rounded-xl bg-surface-container-low border border-outline-variant/30 input-focus-effect" name="pincode" placeholder="411001" type="text"/>
+</div>
+<div class="md:col-span-2">
+<label class="block font-label-lg text-on-surface mb-xs">Primary Delivery Address</label>
+<textarea class="w-full p-md rounded-xl bg-surface-container-low border border-outline-variant/30 input-focus-effect" name="address" placeholder="123 MG Road, Pune..." required="" rows="2"></textarea>
+</div>
+<div class="md:col-span-2 flex items-start gap-sm mt-xs">
+<input class="w-5 h-5 mt-1 rounded border-outline-variant text-primary focus:ring-primary" id="terms" required="" type="checkbox"/>
+<label class="text-body-md text-on-surface-variant" for="terms">I agree to the Terms of Service and Privacy Policy.</label>
+</div>
+<button class="md:col-span-2 h-12 bg-primary text-white font-label-lg rounded-xl hover:scale-[1.01] active:scale-95 transition-all shadow-md mt-sm" type="submit">Register Account</button>
+</form>
+<p class="text-center mt-xl text-body-md text-on-surface-variant">
+                    Already have an account? <button class="text-primary font-bold hover:underline" onclick="toggleForm('login')" type="button">Login</button>
+</p>
+</div>
+</section>
+
+<!-- Registration Card (delivery partners) -->
+<section class="relative z-10 w-full max-w-[640px] hidden-form" id="agent-register-container">
+<div class="glass-card rounded-[24px] p-xl border border-outline-variant/20">
+<div class="text-center mb-xl">
+<h1 class="text-headline-lg text-on-surface mb-xs">Become a Delivery Partner</h1>
+<p class="text-body-md text-on-surface-variant">Sign up to start accepting fuel delivery jobs.</p>
+</div>
+<form class="grid grid-cols-1 md:grid-cols-2 gap-x-lg gap-y-md" id="agent-register-form" method="post" action="deliveryAgent?action=register">
+<div class="md:col-span-2">
+<label class="block font-label-lg text-on-surface mb-xs">Full Name</label>
+<input class="w-full h-12 px-md rounded-xl bg-surface-container-low border border-outline-variant/30 input-focus-effect" name="fullName" placeholder="Suresh Kumar" required="" type="text"/>
+</div>
+<div>
+<label class="block font-label-lg text-on-surface mb-xs">Email Address</label>
+<input class="w-full h-12 px-md rounded-xl bg-surface-container-low border border-outline-variant/30 input-focus-effect" name="email" placeholder="suresh.agent@example.com" required="" type="email"/>
+</div>
+<div>
+<label class="block font-label-lg text-on-surface mb-xs">Mobile Number</label>
+<input class="w-full h-12 px-md rounded-xl bg-surface-container-low border border-outline-variant/30 input-focus-effect" name="phone" placeholder="+91 98765 43210" required="" type="tel"/>
+</div>
+<div>
+<label class="block font-label-lg text-on-surface mb-xs">Password</label>
+<input class="w-full h-12 px-md rounded-xl bg-surface-container-low border border-outline-variant/30 input-focus-effect" id="agent-register-password" name="password" placeholder="••••••••" required="" type="password"/>
+</div>
+<div>
+<label class="block font-label-lg text-on-surface mb-xs">Confirm Password</label>
+<input class="w-full h-12 px-md rounded-xl bg-surface-container-low border border-outline-variant/30 input-focus-effect" id="agent-register-confirm-password" placeholder="••••••••" required="" type="password"/>
+</div>
+<div>
+<label class="block font-label-lg text-on-surface mb-xs">Vehicle Number</label>
+<input class="w-full h-12 px-md rounded-xl bg-surface-container-low border border-outline-variant/30 input-focus-effect" name="vehicleNumber" placeholder="MH12AB1234" type="text"/>
+</div>
+<div>
+<label class="block font-label-lg text-on-surface mb-xs">Vehicle Type</label>
+<select class="w-full h-12 px-md rounded-xl bg-surface-container-low border border-outline-variant/30 input-focus-effect" name="vehicleType">
+<option value="Tanker Bike">Tanker Bike</option>
+<option value="Mini Van">Mini Van</option>
+<option value="Light Commercial Van">Light Commercial Van</option>
+<option value="Heavy Cargo Truck">Heavy Cargo Truck</option>
+</select>
+</div>
+<button class="md:col-span-2 h-12 bg-primary text-white font-label-lg rounded-xl hover:scale-[1.01] active:scale-95 transition-all shadow-md mt-sm" type="submit">Register as Delivery Partner</button>
+</form>
+<p class="text-center mt-xl text-body-md text-on-surface-variant">
+                    Already a partner? <button class="text-primary font-bold hover:underline" onclick="toggleForm('login')" type="button">Login</button>
+</p>
+</div>
+</section>
+</main>
+<footer class="w-full border-t border-outline-variant/50 bg-surface-container-low">
+<div class="text-center py-lg">
+<p class="text-label-sm text-on-surface-variant">&copy; 2026 FuelExpress. All rights reserved.</p>
+</div>
+</footer>
+<script>
+        const loginForm = document.getElementById('login-form');
+        const loginContainer = document.getElementById('login-container');
+        const registerContainer = document.getElementById('register-container');
+        const agentRegisterContainer = document.getElementById('agent-register-container');
+        const switchLine = document.getElementById('switch-to-register-line');
+        const agentSwitchLine = document.getElementById('switch-to-agent-register-line');
+
+        // Three mutually exclusive cards: login, customer register, agent register.
+        function toggleForm(formType) {
+            loginContainer.classList.add('hidden-form');
+            registerContainer.classList.add('hidden-form');
+            agentRegisterContainer.classList.add('hidden-form');
+
+            if (formType === 'register') {
+                registerContainer.classList.remove('hidden-form');
+            } else if (formType === 'agentRegister') {
+                agentRegisterContainer.classList.remove('hidden-form');
+            } else {
+                loginContainer.classList.remove('hidden-form');
+            }
+        }
+
+        function showMessage(text, isError) {
+            const banner = document.getElementById('auth-message');
+            banner.textContent = text;
+            banner.className = 'relative z-10 w-full max-w-[640px] mb-md px-lg py-md rounded-xl font-label-lg text-center ' +
+                (isError ? 'bg-error-container text-on-error-container' : 'bg-green-100 text-green-700');
+        }
+
+        // Confirm-password check before allowing the register form to submit
+        document.getElementById('register-form').addEventListener('submit', function (event) {
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-confirm-password').value;
+            if (password !== confirmPassword) {
+                event.preventDefault();
+                showMessage('Passwords do not match.', true);
+            }
+        });
+
+        // Same check for the delivery-partner registration form
+        document.getElementById('agent-register-form').addEventListener('submit', function (event) {
+            const password = document.getElementById('agent-register-password').value;
+            const confirmPassword = document.getElementById('agent-register-confirm-password').value;
+            if (password !== confirmPassword) {
+                event.preventDefault();
+                showMessage('Passwords do not match.', true);
+            }
+        });
+
+        // The mode query param decides which endpoint the login form posts to
+        // and what copy/labels are shown - customer, delivery agent, or admin.
+        const MODE_CONFIG = {
+            login: { action: 'login', title: 'Welcome Back', subtitle: 'Fueling your fleet with professional precision.', label: 'Customer Login', showRegisterSwitch: true, showAgentRegisterSwitch: false },
+            agent: { action: 'deliveryAgent?action=login', title: 'Delivery Partner Login', subtitle: 'Sign in to view and manage your assigned deliveries.', label: 'Delivery Partner Login', showRegisterSwitch: false, showAgentRegisterSwitch: true },
+            admin: { action: 'adminLogin', title: 'Admin Login', subtitle: 'Restricted access - authorized personnel only.', label: 'Admin Login', showRegisterSwitch: false, showAgentRegisterSwitch: false }
+        };
+
+        (function initFromQueryString() {
+            const params = new URLSearchParams(window.location.search);
+            const mode = params.get('mode') || 'login';
+            const error = params.get('error');
+            const registered = params.get('registered');
+
+            // mode=agentRegister lands the login form's underlying action on the
+            // agent config too, so the "Login" link on the register card already
+            // points at /deliveryAgent?action=login without another page load.
+            const configKey = (mode === 'agentRegister') ? 'agent' : mode;
+            const config = MODE_CONFIG[configKey] || MODE_CONFIG.login;
+            loginForm.setAttribute('action', config.action);
+            document.getElementById('login-title').textContent = config.title;
+            document.getElementById('login-subtitle').textContent = config.subtitle;
+            document.getElementById('mode-label').textContent =
+                (mode === 'agentRegister') ? 'Delivery Partner Registration' : config.label;
+            switchLine.style.display = config.showRegisterSwitch ? '' : 'none';
+            agentSwitchLine.style.display = config.showAgentRegisterSwitch ? '' : 'none';
+
+            if (mode === 'register') {
+                toggleForm('register');
+            } else if (mode === 'agentRegister') {
+                toggleForm('agentRegister');
+            } else {
+                toggleForm('login');
+            }
+
+            if (error === 'missing') {
+                showMessage('Please fill in all required fields.', true);
+            } else if (error === 'invalid') {
+                showMessage('Incorrect email or password.', true);
+            } else if (error === 'exists') {
+                showMessage('An account with that email already exists.', true);
+            } else if (error === 'failed') {
+                showMessage('Something went wrong. Please try again.', true);
+            } else if (registered === 'true') {
+                showMessage('Account created! Please log in below.', false);
+            }
+        })();
+    </script>
+</body></html>

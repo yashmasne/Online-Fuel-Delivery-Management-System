@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://jakarta.ee/xml/ns/jakartaee" version="6.0">
+
+    <display-name>Online Fuel Delivery Management System</display-name>
+
+    <welcome-file-list>
+        <welcome-file>Home_Page.html</welcome-file>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+
+</web-app>

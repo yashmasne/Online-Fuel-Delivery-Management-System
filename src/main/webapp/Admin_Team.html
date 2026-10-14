@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FuelExpress Admin - Manage Team</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = { theme: { extend: {
+      "colors": { "primary": "#004ac6", "secondary-container": "#fd761a", "surface": "#f7f9fb" }
+  }}}
+</script>
+<style>body{font-family:'Inter',sans-serif;background:#f7f9fb;} .glass-card{background:rgba(255,255,255,.85);box-shadow:0 4px 12px rgba(30,41,59,.05);}</style>
+</head>
+<body class="min-h-screen flex">
+<aside class="fixed left-0 top-0 h-screen w-[260px] bg-white border-r border-gray-200 flex flex-col py-4 px-3">
+    <div class="px-3 mb-8">
+        <h1 class="text-xl font-bold text-primary">FuelExpress</h1>
+        <p class="text-xs text-gray-500">Admin Console</p>
+    </div>
+    <nav class="flex-1 space-y-1">
+        <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-100" href="Admin_Dashboard.html"><span class="material-symbols-outlined">monitoring</span> Analytics</a>
+        <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-100" href="Admin_Orders_Users.html"><span class="material-symbols-outlined">local_gas_station</span> Orders &amp; Users</a>
+        <a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 text-primary font-bold" href="Admin_Team.html"><span class="material-symbols-outlined">groups</span> Manage Team</a>
+    </nav>
+    <div class="pt-4 border-t border-gray-200">
+        <a href="logout" class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-100"><span class="material-symbols-outlined">logout</span> Logout</a>
+    </div>
+</aside>
+
+<main class="flex-1 ml-[260px] p-8">
+    <h2 class="text-2xl font-bold mb-6">Manage Team</h2>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
+        <!-- Add Delivery Agent -->
+        <section class="glass-card rounded-2xl p-6">
+            <h4 class="text-lg font-bold mb-4">Add Delivery Agent</h4>
+            <form id="agent-form" class="space-y-3">
+                <input id="agent-fullName" required placeholder="Full name" class="w-full h-11 rounded-lg bg-gray-50 border border-gray-300 px-4" type="text"/>
+                <input id="agent-email" required placeholder="Email" class="w-full h-11 rounded-lg bg-gray-50 border border-gray-300 px-4" type="email"/>
+                <input id="agent-phone" placeholder="Phone" class="w-full h-11 rounded-lg bg-gray-50 border border-gray-300 px-4" type="text"/>
+                <input id="agent-password" required placeholder="Password" class="w-full h-11 rounded-lg bg-gray-50 border border-gray-300 px-4" type="password"/>
+                <input id="agent-vehicleNumber" placeholder="Vehicle number (e.g. MH12AB1234)" class="w-full h-11 rounded-lg bg-gray-50 border border-gray-300 px-4" type="text"/>
+                <select id="agent-vehicleType" class="w-full h-11 rounded-lg bg-gray-50 border border-gray-300 px-4">
+                    <option>Bike / Scooter</option>
+                    <option>Sedan / Saloon</option>
+                    <option>Light Commercial Van</option>
+                    <option>Mini Van</option>
+                    <option>Tanker Bike</option>
+                    <option>Heavy Cargo Truck</option>
+                    <option>Excavator / Heavy Machinery</option>
+                </select>
+                <p id="agent-error" class="text-red-600 text-sm hidden"></p>
+                <button type="submit" class="w-full h-11 rounded-lg bg-primary text-white font-bold hover:opacity-90">Add Agent</button>
+            </form>
+        </section>
+
+        <!-- Add Admin -->
+        <section class="glass-card rounded-2xl p-6">
+            <h4 class="text-lg font-bold mb-4">Add Admin</h4>
+            <form id="admin-form" class="space-y-3">
+                <input id="admin-fullName" required placeholder="Full name" class="w-full h-11 rounded-lg bg-gray-50 border border-gray-300 px-4" type="text"/>
+                <input id="admin-email" required placeholder="Email" class="w-full h-11 rounded-lg bg-gray-50 border border-gray-300 px-4" type="email"/>
+                <input id="admin-phone" placeholder="Phone" class="w-full h-11 rounded-lg bg-gray-50 border border-gray-300 px-4" type="text"/>
+                <input id="admin-password" required placeholder="Password" class="w-full h-11 rounded-lg bg-gray-50 border border-gray-300 px-4" type="password"/>
+                <p id="admin-error" class="text-red-600 text-sm hidden"></p>
+                <button type="submit" class="w-full h-11 rounded-lg bg-secondary-container text-white font-bold hover:opacity-90">Add Admin</button>
+            </form>
+        </section>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Existing Agents -->
+        <section class="glass-card rounded-2xl overflow-hidden">
+            <div class="p-6 border-b border-gray-200"><h4 class="text-lg font-bold">Delivery Agents</h4></div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm">
+                    <thead><tr class="bg-gray-50 border-b border-gray-200 text-gray-500">
+                        <th class="px-4 py-3">Name</th><th class="px-4 py-3">Email</th><th class="px-4 py-3">Vehicle</th><th class="px-4 py-3">Status</th>
+                    </tr></thead>
+                    <tbody id="agents-body"><tr><td class="px-4 py-4 text-gray-500" colspan="4">Loading...</td></tr></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Existing Admins -->
+        <section class="glass-card rounded-2xl overflow-hidden">
+            <div class="p-6 border-b border-gray-200"><h4 class="text-lg font-bold">Admins</h4></div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm">
+                    <thead><tr class="bg-gray-50 border-b border-gray-200 text-gray-500">
+                        <th class="px-4 py-3">Name</th><th class="px-4 py-3">Email</th><th class="px-4 py-3 text-right">Rename</th>
+                    </tr></thead>
+                    <tbody id="admins-body"><tr><td class="px-4 py-4 text-gray-500" colspan="3">Loading...</td></tr></tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</main>
+
+<script>
+    function loadAgents() {
+        fetch('adminManagement?action=allAgents')
+            .then(r => {
+                if (r.status === 403) { window.location.href = 'Auth_Pages.html?mode=admin'; throw new Error('login required'); }
+                return r.json();
+            })
+            .then(agents => {
+                const body = document.getElementById('agents-body');
+                if (agents.length === 0) { body.innerHTML = '<tr><td class="px-4 py-4 text-gray-500" colspan="4">No agents yet.</td></tr>'; return; }
+                body.innerHTML = '';
+                agents.forEach(a => {
+                    const tr = document.createElement('tr');
+                    tr.className = 'border-b border-gray-100 last:border-0';
+                    tr.innerHTML = `<td class="px-4 py-3 font-semibold">${a.fullName}</td>
+                        <td class="px-4 py-3">${a.email}</td>
+                        <td class="px-4 py-3">${a.vehicleType || '-'}</td>
+                        <td class="px-4 py-3">${a.availabilityStatus}</td>`;
+                    body.appendChild(tr);
+                });
+            })
+            .catch(() => {});
+    }
+
+    function loadAdmins() {
+        fetch('adminManagement?action=allAdmins')
+            .then(r => r.json())
+            .then(admins => {
+                const body = document.getElementById('admins-body');
+                if (admins.length === 0) { body.innerHTML = '<tr><td class="px-4 py-4 text-gray-500" colspan="3">No admins yet.</td></tr>'; return; }
+                body.innerHTML = '';
+                admins.forEach(a => {
+                    const tr = document.createElement('tr');
+                    tr.className = 'border-b border-gray-100 last:border-0';
+                    tr.innerHTML = `<td class="px-4 py-3 font-semibold">${a.fullName}</td>
+                        <td class="px-4 py-3">${a.email}</td>
+                        <td class="px-4 py-3 text-right">
+                            <button class="rename-btn text-primary font-bold hover:underline" data-id="${a.userId}" data-name="${a.fullName}">Rename</button>
+                        </td>`;
+                    body.appendChild(tr);
+                });
+                document.querySelectorAll('.rename-btn').forEach(btn => {
+                    btn.addEventListener('click', function () {
+                        const newName = prompt('New name for this admin:', this.dataset.name);
+                        if (!newName || !newName.trim()) return;
+                        fetch('adminManagement?action=renameAdmin', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                            body: new URLSearchParams({ userId: this.dataset.id, fullName: newName.trim() })
+                        }).then(r => r.json()).then(() => loadAdmins());
+                    });
+                });
+            })
+            .catch(() => {});
+    }
+
+    document.getElementById('agent-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const err = document.getElementById('agent-error');
+        err.classList.add('hidden');
+        fetch('adminManagement?action=addAgent', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({
+                fullName: document.getElementById('agent-fullName').value,
+                email: document.getElementById('agent-email').value,
+                phone: document.getElementById('agent-phone').value,
+                password: document.getElementById('agent-password').value,
+                vehicleNumber: document.getElementById('agent-vehicleNumber').value,
+                vehicleType: document.getElementById('agent-vehicleType').value
+            })
+        })
+        .then(r => { if (!r.ok) throw new Error('Could not add agent'); return r.json(); })
+        .then(res => {
+            if (!res.success) throw new Error('Could not add agent');
+            this.reset();
+            loadAgents();
+        })
+        .catch(() => { err.textContent = 'Could not add agent. Check the details and try again.'; err.classList.remove('hidden'); });
+    });
+
+    document.getElementById('admin-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const err = document.getElementById('admin-error');
+        err.classList.add('hidden');
+        fetch('adminManagement?action=addAdmin', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({
+                fullName: document.getElementById('admin-fullName').value,
+                email: document.getElementById('admin-email').value,
+                phone: document.getElementById('admin-phone').value,
+                password: document.getElementById('admin-password').value
+            })
+        })
+        .then(r => { if (!r.ok) throw new Error('Could not add admin'); return r.json(); })
+        .then(res => {
+            if (!res.success) throw new Error('Could not add admin');
+            this.reset();
+            loadAdmins();
+        })
+        .catch(() => { err.textContent = 'Could not add admin. Email may already be in use.'; err.classList.remove('hidden'); });
+    });
+
+    loadAgents();
+    loadAdmins();
+</script>
+</body></html>

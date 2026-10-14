@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FuelExpress | Order History &amp; Profile</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = { theme: { extend: {
+      "colors": { "primary": "#004ac6", "secondary-container": "#fd761a", "surface": "#f7f9fb" }
+  }}}
+</script>
+<style>body{font-family:'Inter',sans-serif;background:#f7f9fb;}</style>
+</head>
+<body class="min-h-screen">
+<header class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-gray-200 h-[72px] flex items-center justify-between px-6">
+    <a href="Home_Page.html" class="text-2xl font-bold text-primary">FuelExpress</a>
+    <div class="flex items-center gap-4">
+        <a href="User_Dashboard.html" class="text-gray-600 hover:text-primary font-medium">Dashboard</a>
+        <a href="Order_Track.html" class="text-gray-600 hover:text-primary font-medium">Order Fuel</a>
+        <a href="logout" class="text-primary font-semibold hover:underline">Logout</a>
+    </div>
+</header>
+
+<main class="max-w-5xl mx-auto p-6 space-y-4">
+    <div class="flex gap-2 border-b border-gray-200">
+        <button id="tab-orders-btn" class="px-4 py-3 font-bold text-primary border-b-2 border-primary">Order History</button>
+        <button id="tab-profile-btn" class="px-4 py-3 font-bold text-gray-500 border-b-2 border-transparent">Profile</button>
+    </div>
+
+    <!-- ORDERS TAB -->
+    <section id="orders-section" class="space-y-4">
+        <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="bg-gray-50 border-b border-gray-200 text-sm text-gray-500">
+                            <th class="px-4 py-3">Order</th>
+                            <th class="px-4 py-3">Fuel</th>
+                            <th class="px-4 py-3">Quantity</th>
+                            <th class="px-4 py-3">Amount</th>
+                            <th class="px-4 py-3">Status</th>
+                            <th class="px-4 py-3 text-right">Feedback</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orders-body" class="divide-y divide-gray-100">
+                        <tr><td class="px-4 py-6 text-gray-500" colspan="6">Loading orders...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROFILE TAB -->
+    <section id="profile-section" class="hidden space-y-4">
+        <div class="bg-white rounded-2xl border border-gray-200 p-8">
+            <h3 class="text-xl font-bold mb-6">Personal Information</h3>
+            <form id="profile-form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block font-semibold mb-2">Full Name</label>
+                    <input name="fullName" id="profile-fullName" class="w-full h-12 rounded-lg bg-gray-50 border border-gray-300 px-4"/>
+                </div>
+                <div>
+                    <label class="block font-semibold mb-2">Email</label>
+                    <input id="profile-email" disabled class="w-full h-12 rounded-lg bg-gray-100 border border-gray-300 px-4 text-gray-500"/>
+                </div>
+                <div>
+                    <label class="block font-semibold mb-2">Phone</label>
+                    <input name="phone" id="profile-phone" class="w-full h-12 rounded-lg bg-gray-50 border border-gray-300 px-4"/>
+                </div>
+                <div>
+                    <label class="block font-semibold mb-2">City</label>
+                    <input name="city" id="profile-city" class="w-full h-12 rounded-lg bg-gray-50 border border-gray-300 px-4"/>
+                </div>
+                <div>
+                    <label class="block font-semibold mb-2">Pincode</label>
+                    <input name="pincode" id="profile-pincode" class="w-full h-12 rounded-lg bg-gray-50 border border-gray-300 px-4"/>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block font-semibold mb-2">Address</label>
+                    <textarea name="address" id="profile-address" rows="2" class="w-full rounded-lg bg-gray-50 border border-gray-300 px-4 py-3"></textarea>
+                </div>
+                <button class="md:col-span-2 h-12 bg-primary text-white rounded-xl font-bold hover:bg-primary/90 transition-all" type="submit">Save Changes</button>
+                <p id="profile-status" class="md:col-span-2 text-center hidden"></p>
+            </form>
+        </div>
+    </section>
+</main>
+
+<script>
+    function showTab(tab) {
+        document.getElementById('orders-section').classList.toggle('hidden', tab !== 'orders');
+        document.getElementById('profile-section').classList.toggle('hidden', tab !== 'profile');
+        document.getElementById('tab-orders-btn').className = 'px-4 py-3 font-bold border-b-2 ' + (tab === 'orders' ? 'text-primary border-primary' : 'text-gray-500 border-transparent');
+        document.getElementById('tab-profile-btn').className = 'px-4 py-3 font-bold border-b-2 ' + (tab === 'profile' ? 'text-primary border-primary' : 'text-gray-500 border-transparent');
+        window.location.hash = tab;
+    }
+    document.getElementById('tab-orders-btn').addEventListener('click', () => showTab('orders'));
+    document.getElementById('tab-profile-btn').addEventListener('click', () => showTab('profile'));
+    showTab(window.location.hash === '#profile' ? 'profile' : 'orders');
+
+    const statusColors = {
+        DELIVERED: 'bg-green-100 text-green-700',
+        CANCELLED: 'bg-red-100 text-red-700',
+        PENDING: 'bg-blue-100 text-blue-700'
+    };
+
+    function loadOrders() {
+        fetch('history')
+            .then(r => {
+                if (r.status === 401) { window.location.href = 'Auth_Pages.html?mode=login'; throw new Error('login required'); }
+                return r.json();
+            })
+            .then(data => {
+                const body = document.getElementById('orders-body');
+                const orders = data.orders || [];
+                const feedbackByOrder = {};
+                (data.feedback || []).forEach(f => feedbackByOrder[f.orderId] = f);
+
+                if (orders.length === 0) {
+                    body.innerHTML = '<tr><td class="px-4 py-6 text-gray-500" colspan="6">No orders yet.</td></tr>';
+                    return;
+                }
+                body.innerHTML = '';
+                orders.forEach(o => {
+                    const tr = document.createElement('tr');
+                    const badgeClass = statusColors[o.orderStatus] || 'bg-gray-100 text-gray-700';
+                    const fb = feedbackByOrder[o.orderId];
+                    let feedbackCell;
+                    if (o.orderStatus !== 'DELIVERED') {
+                        feedbackCell = '<span class="text-gray-400 text-sm">-</span>';
+                    } else if (fb) {
+                        feedbackCell = `<span class="text-sm font-semibold">${'\u2605'.repeat(fb.rating)}</span>`;
+                    } else {
+                        feedbackCell = `<button class="rate-btn text-primary text-sm font-bold hover:underline" data-order-id="${o.orderId}">Rate order</button>`;
+                    }
+                    tr.innerHTML = `
+                        <td class="px-4 py-4 font-semibold">${o.orderNumber}</td>
+                        <td class="px-4 py-4">${o.fuelName}</td>
+                        <td class="px-4 py-4">${o.quantity} L</td>
+                        <td class="px-4 py-4 font-semibold">&#8377;${Number(o.totalAmount).toFixed(2)}</td>
+                        <td class="px-4 py-4"><span class="px-3 py-1 rounded-full text-xs font-bold ${badgeClass}">${o.orderStatus.replaceAll('_',' ')}</span></td>
+                        <td class="px-4 py-4 text-right">${feedbackCell}</td>`;
+                    body.appendChild(tr);
+                });
+
+                document.querySelectorAll('.rate-btn').forEach(btn => {
+                    btn.addEventListener('click', () => submitRating(btn.dataset.orderId));
+                });
+            })
+            .catch(() => {});
+    }
+
+    function submitRating(orderId) {
+        const rating = prompt('Rate this delivery from 1 to 5:');
+        if (!rating) return;
+        const comments = prompt('Any comments? (optional)') || '';
+        fetch('feedback', { method: 'POST', body: new URLSearchParams({ orderId, rating, comments }) })
+            .then(r => r.json())
+            .then(() => loadOrders())
+            .catch(() => alert('Could not submit feedback.'));
+    }
+
+    function loadProfile() {
+        fetch('profile')
+            .then(r => {
+                if (r.status === 401) { window.location.href = 'Auth_Pages.html?mode=login'; throw new Error('login required'); }
+                return r.json();
+            })
+            .then(u => {
+                document.getElementById('profile-fullName').value = u.fullName || '';
+                document.getElementById('profile-email').value = u.email || '';
+                document.getElementById('profile-phone').value = u.phone || '';
+                document.getElementById('profile-city').value = u.city || '';
+                document.getElementById('profile-pincode').value = u.pincode || '';
+                document.getElementById('profile-address').value = u.address || '';
+            })
+            .catch(() => {});
+    }
+
+    document.getElementById('profile-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const body = new URLSearchParams(new FormData(e.target));
+        fetch('profile', { method: 'POST', body })
+            .then(r => r.json())
+            .then(data => {
+                const status = document.getElementById('profile-status');
+                status.textContent = data.success ? 'Profile updated successfully.' : 'Could not update profile.';
+                status.className = 'md:col-span-2 text-center ' + (data.success ? 'text-green-700' : 'text-red-600');
+                status.classList.remove('hidden');
+            });
+    });
+
+    loadOrders();
+    loadProfile();
+</script>
+</body></html>
