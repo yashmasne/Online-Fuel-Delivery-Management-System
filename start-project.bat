@@ -29,7 +29,8 @@ if exist cloudflared.exe (
 echo.
 echo ======================================================================
 echo  PROJECT IS RUNNING!
-echo  Local URL:   http://localhost:8080/Online_Fuel_Delivery_Management_System/Home_Page.html
+echo  Local URL:   http://localhost:8080/
+echo               or: http://localhost:8080/Online_Fuel_Delivery_Management_System/
 echo  Admin Login: admin@fuelexpress.in / admin123
 echo  User Login:  rahul@example.com / pass123
 echo ======================================================================
