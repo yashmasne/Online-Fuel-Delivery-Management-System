@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://fuelexpress.in/sitemap.xml
+Sitemap: https://fuelexpress.onrender.com/sitemap.xml
