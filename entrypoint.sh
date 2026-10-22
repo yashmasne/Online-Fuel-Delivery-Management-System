@@ -25,6 +25,7 @@ fi
 PORT="${PORT:-8080}"
 echo "[Entrypoint] Configuring Tomcat port to $PORT..."
 sed -i "s/port=\"8080\"/port=\"$PORT\"/" /usr/local/tomcat/conf/server.xml
+sed -i "s/port=\"8005\"/port=\"-1\"/" /usr/local/tomcat/conf/server.xml
 
 echo "[Entrypoint] Starting Apache Tomcat 10.1..."
 exec catalina.sh run
