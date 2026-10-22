@@ -19,6 +19,7 @@ RUN apt-get update \
 
 RUN rm -rf /usr/local/tomcat/webapps/*
 COPY --from=build /app /usr/local/tomcat/webapps/ROOT
+COPY --from=build /app /usr/local/tomcat/webapps/Online_Fuel_Delivery_Management_System
 COPY fuel_delivery.sql /app/fuel_delivery.sql
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
