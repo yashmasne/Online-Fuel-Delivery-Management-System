@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: fuelexpress
+    env: docker
+    plan: free
+    region: singapore
+    branch: main
+    autoDeploy: true
+    healthCheckPath: /Home_Page.html
