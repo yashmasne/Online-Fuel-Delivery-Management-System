@@ -351,6 +351,13 @@
                 status.classList.remove('hidden');
                 if (data.success) form.reset();
             })
+            .catch(() => {
+                status.textContent = 'Could not send message. Please try again.';
+                status.className = 'text-center text-body-md text-error';
+                status.classList.remove('hidden');
+            });
+    });
+
     // Mobile menu toggle
     const mobileMenuBtn = document.getElementById('mobile-menu-btn');
     const mobileNav = document.getElementById('mobile-nav');
